@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Map
+  - Weapons
+  - Buttons
+  - Head
+  - Body
+  - Leg
+  - Floor
+  - Enemy
+  - Stairs
+  - Armour
+  - Bomb
+  - Pistol
+  - Muzzle
+  - LeftHandPos
+  - RightHandPos
+  - Throwables_Panel
+  - Obstacles
+  - Bullet
+  - healthPickup
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - Stairs
+  - 
+  - Camera
+  - Enemy
+  - Player
+  - Bullets
+  - Map
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
