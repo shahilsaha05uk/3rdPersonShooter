@@ -26,7 +26,6 @@ public class AudioController : MonoBehaviour
 
     }
 
-
     private void SliderValue(float value)
     {
         mixer.SetFloat(volumeParam, value);
