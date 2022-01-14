@@ -132,16 +132,19 @@ public class PlayerScript : MonoBehaviour
             movement = PlayerMovement.WALK;
         }
         //Shoot
-        if (Input.GetMouseButton(0) && weapon != null)
+        if (raycastWeapon != null)
         {
-            if (raycastWeapon.totalBullets > 0 && !GameManager.canvasOpened)
+            if (Input.GetMouseButton(0) && !GameManager.canvasOpened)
             {
-                raycastWeapon.startBulletSound = true;
-                Shoot(true);
-            }
-            else
-            {
-                raycastWeapon.StopFiring();
+                if (manager.remainingBullets > 0)
+                {
+                    raycastWeapon.startBulletSound = true;
+                    Shoot(true);
+                }
+                else
+                {
+                    raycastWeapon.StopFiring();
+                }
             }
         }
         //Reload
