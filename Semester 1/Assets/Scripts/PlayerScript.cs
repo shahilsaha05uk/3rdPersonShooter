@@ -85,6 +85,7 @@ public class PlayerScript : MonoBehaviour
             inputMove = new Vector3(hori, 0, verti);
             
             Controls();
+
         }
     }
     private void FixedUpdate()
@@ -153,6 +154,16 @@ public class PlayerScript : MonoBehaviour
             reload = true;
         }
 
+        //Jump
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            m_animator.SetTrigger("Jump");
+        }
+
+        if(m_animator.GetCurrentAnimatorStateInfo(0).IsName("Jump"))
+        {
+            m_animator.ResetTrigger("Jump");
+        }
     }
     private void MoveAnim()
     {
