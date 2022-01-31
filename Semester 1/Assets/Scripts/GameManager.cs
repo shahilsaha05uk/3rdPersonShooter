@@ -4,13 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
-public enum ColorChange
-{
-    LIGHT_GREEN,
-    YELLOW,
-    RED,
-    BLUE
-}
 
 public class GameManager : MonoBehaviour
 {
@@ -56,6 +49,12 @@ public class GameManager : MonoBehaviour
     private RaycastWeapon weapon;
     public int buyRefills;
 
+    [Space(2)][Header("Color Pallete")]
+    public Color defaultColor;
+    public Color green;
+    public Color yellow;
+    public Color red;
+
     [Space(10)][Header("Player Refs")]
     public Slider playerHealthBar;
     public Slider playerArmourBar;
@@ -94,22 +93,13 @@ public class GameManager : MonoBehaviour
     {
         Init();
     }
-    private void OnEnable()
-    {
-        gameIsPaused = true;
-        PauseGame(true);
-        StartCoroutine(CountDownTimer(10));
-    }
-    private void Update()
-    {
-        GameLogTextUpdate();
-        HUD_Update();
-        Controls();
-    }
-
     private void Init()
     {
-        playerIsDead = false;
+        healthPickupList = new List<GameObject>();
+        Cursor.lockState = CursorLockMode.Confined;
+        level = 1;
+        levelCompleted = false;
+
         shopCanvas.SetActive(false);
         restartCanvas.SetActive(false);
         gameLogPanel.SetActive(false);
@@ -117,70 +107,118 @@ public class GameManager : MonoBehaviour
         txt_message.gameObject.SetActive(false);
         optionCanvas.SetActive(false);
 
-        healthPickupList = new List<GameObject>();
-        Cursor.lockState = CursorLockMode.Confined;
+        gameIsPaused = true;
+        playerIsDead = false;
 
-        level = 1;
         LevelIncrease(true);
-        levelCompleted = false;
+        PauseGame(true);
 
         playerWeaponSpawnPoint = tempPlayer.transform.Find("WeaponSpawnPoint").gameObject;
 
+        StartCoroutine(CountDownTimer(10));
         StartCoroutine(LevelManager());
         StartCoroutine(MessageCanvasUpdater());
+        StartCoroutine(Controls());
+        StartCoroutine(HUD_Update());
     }
-    private void Controls()
+    private IEnumerator Controls()
     {
-        //Buy Manu
-        if ((Input.GetKeyDown(KeyCode.B) && !shopCanvas.activeInHierarchy) && !gameIsPaused)
+        while (true)
         {
-            shopCanvas.SetActive(true);
-            canvasOpened = true;
-            PauseGame(true);
-        }
-        else if (Input.GetKeyDown(KeyCode.B) && shopCanvas.activeInHierarchy)
-        {
-            shopCanvas.SetActive(false);
-            canvasOpened = false;
-            PauseGame(false);
-        }
+            //Buy Manu
+            if ((Input.GetKeyDown(KeyCode.B) && !shopCanvas.activeInHierarchy) && !gameIsPaused)
+            {
+                shopCanvas.SetActive(true);
+                canvasOpened = true;
+                PauseGame(true);
+            }
+            else if (Input.GetKeyDown(KeyCode.B) && shopCanvas.activeInHierarchy)
+            {
+                shopCanvas.SetActive(false);
+                canvasOpened = false;
+                PauseGame(false);
+            }
 
-        //Option Menu
-        if (Input.GetKeyDown(KeyCode.Escape) && !gameIsPaused)
-        {
-            canvasOpened = true;
-            optionCanvas.SetActive(true);
-            PauseGame(true);
-        }
-        else if (Input.GetKeyDown(KeyCode.Escape) && gameIsPaused)
-        {
-            canvasOpened = false;
-            optionCanvas.SetActive(false);
-            PauseGame(false);
-        }
+            //Option Menu
+            if (Input.GetKeyDown(KeyCode.Escape) && !gameIsPaused)
+            {
+                canvasOpened = true;
+                optionCanvas.SetActive(true);
+                PauseGame(true);
+            }
+            else if (Input.GetKeyDown(KeyCode.Escape) && gameIsPaused)
+            {
+                canvasOpened = false;
+                optionCanvas.SetActive(false);
+                PauseGame(false);
+            }
 
-        //GameLog Canvas
-        if (Input.GetKeyDown(KeyCode.Tab) && !gameLogPanel.activeInHierarchy)
-        {
-            canvasOpened = true;
-            gameLogPanel.SetActive(true);
-        }
-        else if (Input.GetKeyUp(KeyCode.Tab) && gameLogPanel.activeInHierarchy)
-        {
-            gameLogPanel.SetActive(false);
-            canvasOpened = false;
-        }
+            //GameLog Canvas
+            if (Input.GetKeyDown(KeyCode.Tab) && !gameLogPanel.activeInHierarchy)
+            {
+                canvasOpened = true;
+                gameLogPanel.SetActive(true);
+            }
+            else if (Input.GetKeyUp(KeyCode.Tab) && gameLogPanel.activeInHierarchy)
+            {
+                gameLogPanel.SetActive(false);
+                canvasOpened = false;
+            }
 
-        //Pause Game
-        if(Input.GetKeyDown(KeyCode.P) && !gameIsPaused)
-        {
-            PauseGame(true);
-        }
-        else if(Input.GetKeyDown(KeyCode.P) && gameIsPaused)
-        {
-            PauseGame(false);
-        }
+            //Pause Game
+            if (Input.GetKeyDown(KeyCode.P) && !gameIsPaused)
+            {
+                PauseGame(true);
+            }
+            else if (Input.GetKeyDown(KeyCode.P) && gameIsPaused)
+            {
+                PauseGame(false);
+            }
 
+            yield return null;
+        }
+    }
+    public IEnumerator HUD_Update()
+    {
+        while (true)
+        {
+
+            txt_Money.text = $"Money: {money}";
+            txt_totalEnemy.text = "Total Enemy: " + enemyCount;
+            txt_enemyLeft.text = "Enemies Left: " + (enemyCount - enemyKilled);
+            txt_playerKills.text = "Your Kills: " + playerKills;
+
+            if (tempPlayer != null)
+            {
+                weapon = tempPlayer.GetComponent<PlayerScript>().raycastWeapon;
+                if (tempPlayer.GetComponent<PlayerScript>().raycastWeapon != null)
+                {
+                    totalBulletsInMagazine = weapon.totalBullets;
+
+                    remainingBullets = weapon.remainingBullets;
+                    totalMagazines = weapon.totalRefills + buyRefills;
+
+                    txt_gunAmmo.text = "Ammo: " + remainingBullets + $" | {totalBulletsInMagazine}";
+                    txt_gunMagzine.text = "Magazines: " + totalMagazines;
+                }
+            }
+            yield return null;
+        }
+    }
+    public IEnumerator MessageCanvasUpdater()
+    {
+        while (true)
+        {
+            if (messageToDisplay != null)
+            {
+                txt_message.gameObject.SetActive(true);
+                txt_message.text = messageToDisplay;
+                yield return new WaitForSeconds(timerForMessageDisplay);
+                txt_message.gameObject.SetActive(false);
+                messageToDisplay = null;
+            }
+                yield return null;
+        }
     }
     
     public void GameOver(GameObject obj)
@@ -225,40 +263,6 @@ public class GameManager : MonoBehaviour
     {
         this.money += 3000;
     }
-    public void GameLogTextUpdate()
-    {
-        txt_totalEnemy.text = "Total Enemy: "+ enemyCount;
-        txt_enemyLeft.text = "Enemies Left: "+ (enemyCount - enemyKilled);
-        txt_playerKills.text = "Your Kills: "+ playerKills;
-    }
-    public void HUD_Update()
-    {
-        txt_Money.text = $"Money: {money}";
-
-        Debug.Log("Canvas Status: " + canvasOpened);
-
-        if (tempPlayer != null)
-        {
-            weapon = tempPlayer.GetComponent<PlayerScript>().raycastWeapon;
-            if (tempPlayer.GetComponent<PlayerScript>().raycastWeapon != null)
-            {
-                totalBulletsInMagazine = weapon.totalBullets;
-
-                remainingBullets = weapon.remainingBullets;
-                totalMagazines = weapon.totalRefills + buyRefills;
-                Debug.Log("Total magazines: " + totalMagazines);
-                txt_gunAmmo.text = "Ammo: " + remainingBullets + $" | {totalBulletsInMagazine}";
-                txt_gunMagzine.text = "Magazines: " + totalMagazines;
-            }
-        }
-        else
-        {
-            Debug.Log("Player has been Destropyed");
-        }
-
-
-    }
-
 
 
     //Level Manager
@@ -331,8 +335,7 @@ public class GameManager : MonoBehaviour
             float xPos = Random.Range(-48, -27);
             float zPos = Random.Range(0, 24);
             tempEnemy = Instantiate(enemyPrefab);
-            tempEnemy.transform.position = new Vector3(xPos, 1, zPos);
-            tempEnemy.transform.rotation = Quaternion.identity;
+            tempEnemy.transform.SetPositionAndRotation(new Vector3(xPos, 1, zPos), Quaternion.identity);
 
             enemyList.Add(tempEnemy);
         }
@@ -362,8 +365,6 @@ public class GameManager : MonoBehaviour
             Destroy(item);
         }
 
-        //tempEnemy.GetComponent<EnemyScript>().state = States.WANDER;
-
         Destroy(tempPlayer.gameObject);
         Destroy(tempWeapon);
         LevelIncrease(true);
@@ -379,21 +380,6 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public IEnumerator MessageCanvasUpdater()
-    {
-        while (true)
-        {
-            if (messageToDisplay != null)
-            {
-                txt_message.gameObject.SetActive(true);
-                txt_message.text = messageToDisplay;
-                yield return new WaitForSeconds(timerForMessageDisplay);
-                txt_message.gameObject.SetActive(false);
-                messageToDisplay = null;
-            }
-                yield return null;
-        }
-    }
 
     //Waiting Functions
     private IEnumerator WaitBeforeLevelChange(int timer)
@@ -411,14 +397,11 @@ public class GameManager : MonoBehaviour
 
             if(count==0)
             {
-                //gameIsPaused = false;
                 PauseGame(false);
             }
             count--;
         }
     }
-
-
     public static void CursorSetting(CursorLockMode mode, bool visible)
     {
         Cursor.lockState = mode;

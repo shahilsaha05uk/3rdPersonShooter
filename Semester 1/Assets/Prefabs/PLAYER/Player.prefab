@@ -1002,7 +1002,7 @@ MonoBehaviour:
   m_CollideAgainst:
     serializedVersion: 2
     m_Bits: 1
-  m_IgnoreTag: Player
+  m_IgnoreTag: 
   m_TransparentLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -1352,7 +1352,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1459309944455536253}
-  m_LocalRotation: {x: -0.07996471, y: -0.015868671, z: 0.0030289677, w: 0.9966668}
+  m_LocalRotation: {x: -0.07996472, y: -0.015868666, z: 0.0030289665, w: 0.9966668}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1429,7 +1429,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1459309944455758082}
-  m_LocalRotation: {x: -0.11611581, y: -0.015968226, z: 0.0024505402, w: 0.99310434}
+  m_LocalRotation: {x: -0.1161158, y: -0.01596823, z: 0.0024505407, w: 0.99310434}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -4091,7 +4091,6 @@ GameObject:
   - component: {fileID: 6644630796975270475}
   - component: {fileID: 6644630796975270476}
   - component: {fileID: 6644630796975270478}
-  - component: {fileID: 6644630796975270464}
   - component: {fileID: 6390964864327530129}
   - component: {fileID: 251057189}
   m_Layer: 10
@@ -4280,21 +4279,6 @@ MonoBehaviour:
   healthText: {fileID: 0}
   armourText: {fileID: 0}
   defaultColor: {r: 0, g: 0.355, b: 0, a: 0}
---- !u!114 &6644630796975270464
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6644630796975270473}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4539587cf294f21408fa16be11ecae78, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rigidbodyMovement: {fileID: 0}
-  playerHealth: {fileID: 0}
-  manager: {fileID: 0}
 --- !u!54 &6390964864327530129
 Rigidbody:
   m_ObjectHideFlags: 0

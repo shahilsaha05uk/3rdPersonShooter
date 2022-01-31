@@ -731,6 +731,7 @@ MonoBehaviour:
   armourText: {fileID: 0}
   defaultColor: {r: 0, g: 0.3490566, b: 0.0033439263, a: 0}
   wasHit: 0
+  manager: {fileID: 0}
 --- !u!136 &8009172816329456808
 CapsuleCollider:
   m_ObjectHideFlags: 0
